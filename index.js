@@ -68,4 +68,35 @@ app.delete('/delete/:Name',(req,res)=>{
     }
 })
 
+app.put('/update',(req,res)=>{
+    const data=fs.readFileSync('Notes.json')
+    var JsData=JSON.parse(data)
+    flag=JsData.Records.some(Record=>Record.name===req.body.Name)
+    
+    if(flag)
+    {
+        JsData.Records.forEach(Record => {
+            
+            if(Record.name==req.body.Name)
+            {
+                
+                Record.name=req.body.Name?req.body.Name:Record.name
+                Record.notes=req.body.Note?req.body.Note:Record.notes
+        
+                FileData=JSON.stringify(JsData)
+        
+                fs.writeFileSync('Notes.json',FileData)
+                
+                return res.send(`${req.body.Name}`)
+            }
+            });
+            
+
+        }
+        else 
+        return res.send(`${req.body.Name}`)
+    
+})
+
+
 app.listen(process.env.PORT|| 8081)
